@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Advent drawing</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/popover.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js"></script>
+    <script src="https://unpkg.com/v-tooltip"></script>
+    <script src="https://unpkg.com/vue-select@latest"></script>
+    <script src="https://unpkg.com/vue-async-computed@3.4.1"></script>
+    <style></style>
+</head>
+<body>
+<div id="app">
+    <h1>Advent of Code</h1>
+    <img src="img/skaal.png">
+    <div v-if="!ticketdrawing">
+        <div class="group">
+            <div><label>Name: <input v-model="uName" v-on:keyup.enter="addTickets()" type="text"></label></div>
+            <div><label>Tickets: <input v-model.number="uTickets" v-on:keyup.enter="addTickets()" min="1" type="number"></label></div>
+            <button class="a-button" v-on:click="addTickets()">Add</button>
+        </div>
+        <button class="m-button" v-on:click="ticketdrawing = !ticketdrawing">Go to drawing</button>
+        <table v-if="tickets.length" class="group">
+            <tr v-for="(ticket,i) in ticketsCount">
+                <td>
+                    <span style="vertical-align: middle;"> {{ticket[1]}}</span>
+                    <img style="vertical-align: middle;width:auto;" src="img/star.png" />
+                    <span style="vertical-align: middle;">{{ticket[0]}}</span>
+                </td>
+                <td><button class="r-button" v-on:click="removeTicket(ticket[0])">x</button></td>
+            </tr>
+        </table>
+    </div>
+    <div v-if="ticketdrawing">
+        <div><button class="m-button" v-on:click="ticketdrawing = !ticketdrawing">Add more tickets</button></div>
+        <div><button :disabled="drawing" class="a-button" v-on:click="drawTicket">Draw winner</button></div>
+        <table>
+            <h1 v-bind:class="[wColor]" id="winner"  v-if="winner">{{winner}}</h1>
+            <tr v-if="previousWinners.length" v-for="(ticket,i) in previousWinners">
+                <td>{{ticket}}</td>
+                <td><button class="r-button" v-on:click="undoDrawing(i)">Add back ticket</button></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script src="js/index.js"></script>
+</body>
+</html>
